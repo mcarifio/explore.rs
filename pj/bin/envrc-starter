@@ -1,6 +1,19 @@
 # direnv allow
 export TOP=$(realpath -Lm $(dirname ${BASH_SOURCE%*/}))
 PATH_add $(find ${TOP} -type d -name bin)
-# source env.sh || true
+source env.sh || true # delegate the rest of the environment setup
 
-for _c in rustc cargo; do $(type -P ${_c}) > /dev/null || >&2 echo "${_c} unexpectedly not on PATH"; done
+# have all the prerequisites?
+${TOP}/pj/bin/check.sh
+# delegate the rest of the activation
+${TOP}/pj/bin/activate.sh
+
+# TODO mike@carif.io: doesn't work
+deactivate() {
+    echo "deactivating with ${FUNCNAME}"
+    ${TOP}/pj/bin/${FUNCNAME}.sh
+}
+
+
+
+
